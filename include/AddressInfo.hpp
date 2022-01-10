@@ -20,6 +20,10 @@ class AddressInfo
 {
 public:
     int         m_flags;
+    AIPAddress  *m_ipAddress;
+    sa_family_t m_ipFamily;
+    int         m_sockType;
+    int         m_protocol;
 
     AddressInfo();
     AddressInfo(sa_family_t family, int sockType, int protocol, int flags);
@@ -53,11 +57,6 @@ public:
         const char *what() const throw();
     };
 
-private:
-    AIPAddress  *_ipAddress;
-    sa_family_t _ipFamily;
-    int         _sockType;
-    int         _protocol;
 };
 
 #endif
