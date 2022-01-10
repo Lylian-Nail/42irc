@@ -24,8 +24,8 @@ int main(int ac, char const *av[])
     try
     {
         infos = AddressInfo(av[1], NULL);
-        std::cout << *infos.getIPAddress() << " protocol: "
-        << infos.getProtocol() << " socktype: " << infos.getSockType() 
+        std::cout << *infos.m_ipAddress << " protocol: "
+        << infos.m_protocol << " socktype: " << infos.m_sockType
         << std::endl;
     }
     catch (std::exception const &e)

@@ -34,11 +34,6 @@ public:
     AddressInfo(AddressInfo const &copy);
     ~AddressInfo();
 
-    int getSockType() const;
-    int getProtocol() const;
-    AIPAddress const *getIPAddress() const;
-    sa_family_t getIPFamily() const;
-
     AddressInfo &operator=(AddressInfo const &rhs);
 
     class GetAddressInfoException : public std::exception

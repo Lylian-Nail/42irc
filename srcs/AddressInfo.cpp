@@ -16,14 +16,14 @@
 #include <cstring>
 
 AddressInfo::AddressInfo():
-    _ipAddress(NULL)
+    m_ipAddress(NULL)
 {}
 
 AddressInfo::AddressInfo(
     sa_family_t family, int sockType, int protocol, int flags
 ):
-        m_flags(flags), _ipAddress(NULL), _ipFamily(family),
-        _sockType(sockType), _protocol(protocol)
+        m_flags(flags), m_ipAddress(NULL), m_ipFamily(family),
+        m_sockType(sockType), m_protocol(protocol)
 {}
 
 AddressInfo::AddressInfo(
@@ -34,9 +34,9 @@ AddressInfo::AddressInfo(
     struct addrinfo     cHint;
 
     std::memset(&cHint, 0, sizeof(cHint));
-    cHint.ai_family = hint.getIPFamily();
-    cHint.ai_socktype = hint.getSockType();
-    cHint.ai_protocol = hint.getProtocol();
+    cHint.ai_family = hint.m_ipFamily;
+    cHint.ai_socktype = hint.m_sockType;
+    cHint.ai_protocol = hint.m_protocol;
     cHint.ai_flags = hint.m_flags;
 
     struct addrinfo     *results;
@@ -46,31 +46,31 @@ AddressInfo::AddressInfo(
     if (errcode != 0)
         throw GetAddressInfoException(errcode);
 
-    _ipAddress = NULL;
+    m_ipAddress = NULL;
     for (
         struct addrinfo *iter = results;
         iter != NULL;
         iter = iter->ai_next
     )
     {
-        _ipFamily = iter->ai_family;
-        _sockType = iter->ai_socktype;
-        _protocol = iter->ai_protocol;
+        m_ipFamily = iter->ai_family;
+        m_sockType = iter->ai_socktype;
+        m_protocol = iter->ai_protocol;
         if (iter->ai_family == AF_INET)
         {
-            _ipAddress = ::getIPAddress(
+            m_ipAddress = ::getIPAddress(
                 reinterpret_cast<struct sockaddr_in *>(iter->ai_addr)
                 ->sin_addr
             );
         }
         else if (iter->ai_family == AF_INET6)
         {
-            _ipAddress = ::getIPAddress(
+            m_ipAddress = ::getIPAddress(
                 reinterpret_cast<struct sockaddr_in6 *>(iter->ai_addr)
                 ->sin6_addr
             );
         }
-        if (_ipAddress)
+        if (m_ipAddress)
             return ;
     }
 
@@ -78,38 +78,18 @@ AddressInfo::AddressInfo(
 }
 
 AddressInfo::AddressInfo(AddressInfo const &copy):
-        m_flags(copy.m_flags), _ipFamily(copy.getIPFamily()),
-        _sockType(copy.getSockType()), _protocol(copy.getProtocol())
+        m_flags(copy.m_flags), m_ipFamily(copy.m_ipFamily),
+        m_sockType(copy.m_sockType), m_protocol(copy.m_protocol)
 {
-    if (copy.getIPAddress() != NULL)
-        _ipAddress = copy.getIPAddress()->clone();
+    if (copy.m_ipAddress != NULL)
+        m_ipAddress = copy.m_ipAddress->clone();
     else
-        _ipAddress = NULL;
+        m_ipAddress = NULL;
 }
 
 AddressInfo::~AddressInfo()
 {
-    delete _ipAddress;
-}
-
-int AddressInfo::getSockType() const
-{
-    return _sockType;
-}
-
-int AddressInfo::getProtocol() const
-{
-    return _protocol;
-}
-
-AIPAddress const *AddressInfo::getIPAddress() const
-{
-    return _ipAddress;
-}
-
-sa_family_t AddressInfo::getIPFamily() const
-{
-    return _ipFamily;
+    delete m_ipAddress;
 }
 
 AddressInfo &AddressInfo::operator=(AddressInfo const &rhs)
@@ -117,14 +97,14 @@ AddressInfo &AddressInfo::operator=(AddressInfo const &rhs)
     if (this != &rhs)
     {
         m_flags = rhs.m_flags;
-        delete _ipAddress;
-        if (rhs.getIPAddress() != NULL)
-            _ipAddress = rhs.getIPAddress()->clone();
+        delete m_ipAddress;
+        if (rhs.m_ipAddress != NULL)
+            m_ipAddress = rhs.m_ipAddress->clone();
         else
-            _ipAddress = NULL;
-        _ipFamily = rhs.getIPFamily();
-        _sockType = rhs.getSockType();
-        _protocol = rhs.getProtocol();
+            m_ipAddress = NULL;
+        m_ipFamily = rhs.m_ipFamily;
+        m_sockType = rhs.m_sockType;
+        m_protocol = rhs.m_protocol;
     }
     return *this;
 }
