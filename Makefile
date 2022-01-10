@@ -20,11 +20,11 @@ PATHB := build
 PATHD = ${PATHB}/depends
 PATHI := include
 
-CXX := clang++
+CXX := c++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98 -g
 CXXFLAGS += ${addprefix -I , ${PATHI}}
 DFLAGS = -MMD -MT $@ -MF ${PATHD}/$*.d
-LD := clang++
+LD := c++
 LDFLAGS :=
 
 SRCS_DIR = ${shell find ${PATHS} -type d}
