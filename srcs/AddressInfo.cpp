@@ -133,3 +133,45 @@ const char *AddressInfo::NoAddressInfoException::what() const throw()
 {
     return "no address info founds";
 }
+
+std::ostream &operator<<(std::ostream &os, AddressInfo const &infos)
+{
+    std::string outputIP = infos.m_ipAddress ?
+            infos.m_ipAddress->getRepresentation() : "no ip address";
+
+    os << "IP Address: " << outputIP << ", family: ";
+    switch (infos.m_ipFamily) {
+        case AF_INET:
+            os << "IPv4";
+            break;
+        case AF_INET6:
+            os << "IPv6";
+            break;
+        default:
+            os << infos.m_ipFamily;
+    }
+    os << ", port: " << ntohs(infos.m_port) << ", sock type: ";
+    switch (infos.m_sockType) {
+        case SOCK_DGRAM:
+            os << "Datagram";
+            break;
+        case SOCK_STREAM:
+            os << "Stream";
+            break;
+        default:
+            os << infos.m_sockType;
+    }
+    os << ", protocol: ";
+    switch (infos.m_protocol) {
+        case IPPROTO_TCP:
+            os << "TCP";
+            break;
+        case IPPROTO_UDP:
+            os << "UDP";
+            break;
+        default:
+            os << infos.m_protocol;
+    }
+
+    return os;
+}

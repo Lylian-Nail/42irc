@@ -25,9 +25,7 @@ int main(int ac, char const *av[])
     try
     {
         infos = AddressInfo(av[1], "http");
-        std::cout << "IPAddress: " << *infos.m_ipAddress << " port: " <<
-        infos.m_port << " protocol: " << infos.m_protocol << " socktype: "
-        << infos.m_sockType << std::endl;
+        std::cout << infos << std::endl;
     }
     catch (std::exception const &e)
     {
