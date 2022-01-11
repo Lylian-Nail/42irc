@@ -14,19 +14,20 @@
 #include <iostream>
 #include "AddressInfo.hpp"
 
+#include <arpa/inet.h>
+
 int main(int ac, char const *av[])
 {
     if (ac != 2)
         return EXIT_FAILURE;
 
     AddressInfo infos;
-
     try
     {
-        infos = AddressInfo(av[1], NULL);
-        std::cout << *infos.m_ipAddress << " protocol: "
-        << infos.m_protocol << " socktype: " << infos.m_sockType
-        << std::endl;
+        infos = AddressInfo(av[1], "http");
+        std::cout << "IPAddress: " << *infos.m_ipAddress << " port: " <<
+        infos.m_port << " protocol: " << infos.m_protocol << " socktype: "
+        << infos.m_sockType << std::endl;
     }
     catch (std::exception const &e)
     {

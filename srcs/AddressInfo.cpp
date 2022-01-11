@@ -16,15 +16,18 @@
 #include <cstring>
 
 AddressInfo::AddressInfo():
-    m_ipAddress(NULL)
+    m_flags(0), m_ipAddress(NULL), m_ipFamily(AF_UNSPEC),
+    m_port(0), m_sockType(0), m_protocol(0)
 {}
 
 AddressInfo::AddressInfo(
     sa_family_t family, int sockType, int protocol, int flags
 ):
         m_flags(flags), m_ipAddress(NULL), m_ipFamily(family),
-        m_sockType(sockType), m_protocol(protocol)
+        m_port(0), m_sockType(sockType), m_protocol(protocol)
 {}
+
+#include <iostream>
 
 AddressInfo::AddressInfo(
     char const *ipAddress, char const *service,
@@ -62,6 +65,8 @@ AddressInfo::AddressInfo(
                 reinterpret_cast<struct sockaddr_in *>(iter->ai_addr)
                 ->sin_addr
             );
+            m_port = reinterpret_cast<struct sockaddr_in *>(iter->ai_addr)
+                    ->sin_port;
         }
         else if (iter->ai_family == AF_INET6)
         {
@@ -69,16 +74,21 @@ AddressInfo::AddressInfo(
                 reinterpret_cast<struct sockaddr_in6 *>(iter->ai_addr)
                 ->sin6_addr
             );
+            m_port = reinterpret_cast<struct sockaddr_in6 *>(iter->ai_addr)
+                    ->sin6_port;
         }
+        // Return when finding 1st result
         if (m_ipAddress)
+        {
             return ;
+        }
     }
 
     throw NoAddressInfoException();
 }
 
 AddressInfo::AddressInfo(AddressInfo const &copy):
-        m_flags(copy.m_flags), m_ipFamily(copy.m_ipFamily),
+        m_flags(copy.m_flags), m_ipFamily(copy.m_ipFamily), m_port(copy.m_port),
         m_sockType(copy.m_sockType), m_protocol(copy.m_protocol)
 {
     if (copy.m_ipAddress != NULL)
@@ -103,6 +113,7 @@ AddressInfo &AddressInfo::operator=(AddressInfo const &rhs)
         else
             m_ipAddress = NULL;
         m_ipFamily = rhs.m_ipFamily;
+        m_port = rhs.m_port;
         m_sockType = rhs.m_sockType;
         m_protocol = rhs.m_protocol;
     }

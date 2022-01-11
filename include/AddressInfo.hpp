@@ -22,6 +22,7 @@ public:
     int         m_flags;
     AIPAddress  *m_ipAddress;
     sa_family_t m_ipFamily;
+    in_port_t   m_port;
     int         m_sockType;
     int         m_protocol;
 
