@@ -87,7 +87,7 @@ AddressInfo::AddressInfo(
     }
 
     freeaddrinfo(results);
-    throw NoAddressInfoException()
+    throw NoAddressInfoException();
 }
 
 AddressInfo::AddressInfo(AddressInfo const &copy):
@@ -130,7 +130,10 @@ AddressInfo::AddressInfo(struct sockaddr const *address, socklen_t sockLen,
         m_flags(0), m_ipFamily(address->sa_family), m_sockType(sockType),
         m_protocol(protocol)
 {
-    *m_cStyle.ai_addr = *address;
+    m_internalAddressStorage = *reinterpret_cast<sockaddr_storage const *>(
+        address
+    );
+    m_cStyle.ai_addr = reinterpret_cast<sockaddr *>(&m_internalAddressStorage);
     m_cStyle.ai_addrlen = sockLen;
     if (m_ipFamily == AF_INET)
     {

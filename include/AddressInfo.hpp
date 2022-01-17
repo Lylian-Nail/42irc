@@ -59,6 +59,8 @@ public:
         const char *what() const throw();
     };
 
+private:
+    struct sockaddr_storage m_internalAddressStorage;
 };
 
 std::ostream &operator<<(std::ostream &os, AddressInfo const &infos);
