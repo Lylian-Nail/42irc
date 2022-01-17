@@ -12,7 +12,6 @@
 
 #include "AddressInfo.hpp"
 #include <sys/types.h>
-#include <netdb.h>
 #include <cstring>
 
 AddressInfo::AddressInfo():
@@ -56,6 +55,8 @@ AddressInfo::AddressInfo(
         iter = iter->ai_next
     )
     {
+        m_cStyle = *iter;
+        m_cStyle.ai_next = NULL;
         m_ipFamily = iter->ai_family;
         m_sockType = iter->ai_socktype;
         m_protocol = iter->ai_protocol;
@@ -84,7 +85,7 @@ AddressInfo::AddressInfo(
         }
     }
 
-    throw NoAddressInfoException();
+    throw NoAddressInfoException()
 }
 
 AddressInfo::AddressInfo(AddressInfo const &copy):
