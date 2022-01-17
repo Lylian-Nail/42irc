@@ -12,7 +12,6 @@
 
 #include "AddressInfo.hpp"
 #include <sys/types.h>
-#include <netdb.h>
 #include <cstring>
 
 AddressInfo::AddressInfo():
@@ -56,6 +55,8 @@ AddressInfo::AddressInfo(
         iter = iter->ai_next
     )
     {
+        m_cStyle = *iter;
+        m_cStyle.ai_next = NULL;
         m_ipFamily = iter->ai_family;
         m_sockType = iter->ai_socktype;
         m_protocol = iter->ai_protocol;
@@ -80,16 +81,19 @@ AddressInfo::AddressInfo(
         // Return when finding 1st result
         if (m_ipAddress)
         {
+            freeaddrinfo(results);
             return ;
         }
     }
 
+    freeaddrinfo(results);
     throw NoAddressInfoException();
 }
 
 AddressInfo::AddressInfo(AddressInfo const &copy):
         m_flags(copy.m_flags), m_ipFamily(copy.m_ipFamily), m_port(copy.m_port),
-        m_sockType(copy.m_sockType), m_protocol(copy.m_protocol)
+        m_sockType(copy.m_sockType), m_protocol(copy.m_protocol),
+        m_cStyle((copy.m_cStyle))
 {
     if (copy.m_ipAddress != NULL)
         m_ipAddress = copy.m_ipAddress->clone();
@@ -116,8 +120,46 @@ AddressInfo &AddressInfo::operator=(AddressInfo const &rhs)
         m_port = rhs.m_port;
         m_sockType = rhs.m_sockType;
         m_protocol = rhs.m_protocol;
+        m_cStyle = rhs.m_cStyle;
     }
     return *this;
+}
+
+AddressInfo::AddressInfo(struct sockaddr const *address, socklen_t sockLen,
+                         int sockType, int protocol):
+        m_flags(0), m_ipFamily(address->sa_family), m_sockType(sockType),
+        m_protocol(protocol)
+{
+    m_internalAddressStorage = *reinterpret_cast<sockaddr_storage const *>(
+        address
+    );
+    m_cStyle.ai_addr = reinterpret_cast<sockaddr *>(&m_internalAddressStorage);
+    m_cStyle.ai_addrlen = sockLen;
+    if (m_ipFamily == AF_INET)
+    {
+        m_ipAddress = ::getIPAddress(
+            reinterpret_cast<struct sockaddr_in *>(m_cStyle.ai_addr)
+            ->sin_addr
+        );
+        m_port = reinterpret_cast<struct sockaddr_in *>(m_cStyle.ai_addr)
+                ->sin_port;
+    }
+    else if (m_ipFamily == AF_INET6)
+    {
+        m_ipAddress = ::getIPAddress(
+            reinterpret_cast<struct sockaddr_in6 *>(m_cStyle.ai_addr)
+            ->sin6_addr
+        );
+        m_port = reinterpret_cast<struct sockaddr_in6 *>(m_cStyle.ai_addr)
+                ->sin6_port;
+    }
+
+    m_cStyle.ai_protocol = m_protocol;
+    m_cStyle.ai_family = m_ipFamily;
+    m_cStyle.ai_socktype = m_sockType;
+    m_cStyle.ai_flags = 0;
+    m_cStyle.ai_canonname = NULL;
+    m_cStyle.ai_next = NULL;
 }
 
 AddressInfo::GetAddressInfoException::GetAddressInfoException(int errcode):

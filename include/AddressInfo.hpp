@@ -15,19 +15,25 @@
 # define ADDRESS_INFO_HPP
 
 # include "IPAddress.hpp"
+# include <netdb.h>
 
 class AddressInfo
 {
 public:
-    int         m_flags;
-    AIPAddress  *m_ipAddress;
-    sa_family_t m_ipFamily;
-    in_port_t   m_port;
-    int         m_sockType;
-    int         m_protocol;
+    int             m_flags;
+    AIPAddress      *m_ipAddress;
+    sa_family_t     m_ipFamily;
+    in_port_t       m_port;
+    int             m_sockType;
+    int             m_protocol;
+    struct addrinfo m_cStyle;
 
     AddressInfo();
     AddressInfo(sa_family_t family, int sockType, int protocol, int flags);
+    AddressInfo(
+            struct sockaddr const *address, socklen_t sockLen,
+            int sockType, int protocol
+    );
     AddressInfo(
         char const *ipAddress, char const *service,
         AddressInfo const &hint = AddressInfo(0, 0, 0, 0)
@@ -53,6 +59,8 @@ public:
         const char *what() const throw();
     };
 
+private:
+    struct sockaddr_storage m_internalAddressStorage;
 };
 
 std::ostream &operator<<(std::ostream &os, AddressInfo const &infos);

@@ -33,6 +33,7 @@ vpath %.cpp ${foreach dir, ${SRCS_DIR}, ${dir}:}
 SRCS := \
 IPAddress.cpp \
 AddressInfo.cpp \
+Socket.cpp \
 main.cpp
 OBJS = ${addprefix ${PATHB}/, ${SRCS:.cpp=.o}}
 DFILES = ${addprefix ${PATHD}/, ${SRCS:.cpp=.d}}
