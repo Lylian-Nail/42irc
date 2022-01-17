@@ -2,6 +2,7 @@
 #define SOCKET_HPP
 
 # include "AddressInfo.hpp"
+# include <sstream>
 
 class Socket
 {
@@ -29,6 +30,9 @@ public:
     void connect(const AddressInfo *remoteAddress = NULL);
     void listen(int maxQueue = 5);
     Socket accept() const;
+
+    ssize_t send(void const *buffer, size_t size, int flags = 0);
+    ssize_t recv(void *buffer, size_t size, int flags = 0);
 
     Socket &operator=(Socket const &rhs);
 

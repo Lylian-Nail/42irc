@@ -182,6 +182,16 @@ Socket Socket::accept() const
     return Socket(fd, addressInfo);
 }
 
+ssize_t Socket::send(void const *buffer, size_t size, int flags)
+{
+    return ::send(m_filedesc, buffer, size, flags);
+}
+
+ssize_t Socket::recv(void *buffer, size_t size, int flags)
+{
+    return ::recv(m_filedesc, buffer, size, flags);
+}
+
 std::ostream &operator<<(std::ostream &os, const Socket &socket)
 {
     std::string isBlocking = socket.isBlocking() ?

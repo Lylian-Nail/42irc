@@ -16,8 +16,31 @@
 
 int main(int ac, char const *av[])
 {
-    if (ac != 2)
+    if (ac != 3)
         return EXIT_FAILURE;
-    (void)ac;
-    (void)av;
+
+    Socket socketServer(AddressInfo(av[1], "1080"));
+    socketServer.setReusingAddress(true);
+    socketServer.bind();
+    socketServer.listen();
+
+    std::cout << socketServer << std::endl;
+    Socket socketClient = socketServer.accept();
+    std::cout << socketClient << std::endl;
+
+    socketClient.close();
+    socketServer.close();
+
+    char buffer[32] = "GET /";
+    Socket socketTCP(AddressInfo(av[2], "http"));
+    socketTCP.connect();
+    socketTCP.send(buffer, sizeof("GET /"));
+
+    ssize_t  recvLen = sizeof(buffer) - 1;
+    while (recvLen == sizeof(buffer) - 1)
+    {
+        ssize_t recvLen = socketTCP.recv(buffer, sizeof(buffer) - 1);
+        buffer[recvLen] = '\0';
+        std::cout << buffer << std::endl;
+    }
 }
