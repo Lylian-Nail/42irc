@@ -39,7 +39,7 @@ int main(int ac, char const *av[])
     ssize_t  recvLen = sizeof(buffer) - 1;
     while (recvLen == sizeof(buffer) - 1)
     {
-        ssize_t recvLen = socketTCP.recv(buffer, sizeof(buffer) - 1);
+        recvLen = socketTCP.recv(buffer, sizeof(buffer) - 1);
         buffer[recvLen] = '\0';
         std::cout << buffer << std::endl;
     }

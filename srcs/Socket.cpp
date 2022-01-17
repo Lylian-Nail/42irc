@@ -1,6 +1,7 @@
 #include "Socket.hpp"
 #include <fcntl.h>
 #include <unistd.h>
+#include <cstring>
 
 Socket::Socket():
     m_filedesc(-1), m_isBlocking(true),
@@ -18,8 +19,7 @@ Socket::Socket(AddressInfo const &addressInfo):
     );
 
     if (m_filedesc < 0)
-        // TODO: Throw errno sys exception
-    { ; }
+        throw (SysException(m_filedesc));
 }
 
 Socket::Socket(int filedesc, AddressInfo const &addressInfo,
@@ -63,22 +63,24 @@ void Socket::setBlocking(bool isBlocking)
 {
     if (isBlocking && !m_isBlocking)
     {
+        // Can not do this because of subject
+        /*
         int opts = fcntl(m_filedesc, F_GETFL);
         if (opts < 0)
-            // TODO: Throw errno sys exception
-        { ; }
+            throw (SysException(opts));
         opts = opts & ~(O_NONBLOCK);
         opts = fcntl(m_filedesc, F_SETFL, opts);
         if (opts < 0)
-            // TODO: throw errno sys exception
-        { ; }
+            throw (SysException(opts));
         m_isBlocking = true;
+        */
+        ;
     }
     else if (!isBlocking && m_isBlocking)
     {
-        if (fcntl(m_filedesc, F_SETFL, O_NONBLOCK) < 0)
-            // TODO: throw errno sys exception
-        { ; }
+        int result = fcntl(m_filedesc, F_SETFL, O_NONBLOCK);
+        if (result < 0)
+            throw (SysException(result));
         m_isBlocking = false;
     }
 }
@@ -89,20 +91,20 @@ void Socket::setReusingAddress(bool isReusingAddress)
 
     if (isReusingAddress != m_isReusingAddress)
     {
-        if (setsockopt(
+        int result = setsockopt(
                 m_filedesc, SOL_SOCKET, SO_REUSEADDR,
-                &value, sizeof(value)))
-            // TODO: throw errno sys exception
-        { ; }
+                &value, sizeof(value));
+        if (result)
+            throw (SysException(result));
         m_isReusingAddress = isReusingAddress;
     }
 }
 
 void Socket::close()
 {
-    if (::close(m_filedesc))
-        // TODO: throw errno sys exception ?
-    { ; }
+    int result = ::close(m_filedesc);
+    if (result)
+        throw (SysException(result));
     m_filedesc = -1;
 }
 
@@ -125,9 +127,9 @@ Socket &Socket::operator=(const Socket &rhs)
 
 void Socket::setSockOpt(int level, int optName, void *value, size_t size)
 {
-    if (setsockopt(m_filedesc, level, optName, value, size))
-        // TODO: throw errno sys exception
-    { ; }
+    int result = setsockopt(m_filedesc, level, optName, value, size);
+    if (result)
+        throw (SysException(result));
 }
 
 void Socket::bind(const AddressInfo *newAddress)
@@ -135,12 +137,12 @@ void Socket::bind(const AddressInfo *newAddress)
     if (newAddress)
         m_addressInfo = *newAddress;
 
-    if (::bind(
+    int result = ::bind(
             m_filedesc, m_addressInfo.m_cStyle.ai_addr,
-            m_addressInfo.m_cStyle.ai_addrlen)
-            )
-        // TODO: throw errno sys exception
-    { ; }
+            m_addressInfo.m_cStyle.ai_addrlen
+            );
+    if (result)
+        throw (SysException(result));
 }
 
 void Socket::connect(const AddressInfo *remoteAddress)
@@ -148,19 +150,19 @@ void Socket::connect(const AddressInfo *remoteAddress)
     if (remoteAddress)
         m_addressInfo = *remoteAddress;
 
-    if (::connect(
+    int result = ::connect(
             m_filedesc, m_addressInfo.m_cStyle.ai_addr,
-            m_addressInfo.m_cStyle.ai_addrlen)
-            )
-        // TODO: throw errno sys exception
-    { ; }
+            m_addressInfo.m_cStyle.ai_addrlen
+            );
+    if (result)
+        throw (SysException(result));
 }
 
 void Socket::listen(int maxQueue)
 {
-    if (::listen(m_filedesc, maxQueue))
-        // TODO: throw errno sys exception
-    { ; }
+    int result = ::listen(m_filedesc, maxQueue);
+    if (result)
+        throw (SysException(result));
 }
 
 Socket Socket::accept() const
@@ -174,8 +176,7 @@ Socket Socket::accept() const
                 &size
             );
     if (fd < 0)
-        // TODO: throw errno sys exception
-    { ; }
+        throw (SysException(fd));
 
     AddressInfo addressInfo(reinterpret_cast<struct sockaddr *>
             (&storageAddress), size, SOCK_STREAM, IPPROTO_TCP);
@@ -204,4 +205,15 @@ std::ostream &operator<<(std::ostream &os, const Socket &socket)
     << isReusingAddress;
 
     return os;
+}
+
+Socket::SysException::SysException(int errcode):
+        m_errcode(errcode)
+{
+
+}
+
+const char *Socket::SysException::what() const throw()
+{
+    return std::strerror(m_errcode);
 }

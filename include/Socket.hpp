@@ -36,6 +36,16 @@ public:
 
     Socket &operator=(Socket const &rhs);
 
+    class SysException : public std::exception
+    {
+    public:
+        SysException(int errcode);
+        const char *what() const throw();
+
+    private:
+        int m_errcode;
+    };
+
 private:
     int                 m_filedesc;
     bool                m_isBlocking;
