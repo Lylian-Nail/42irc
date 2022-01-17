@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2022-01-12T15:45:12.544Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36" etag="92jKgL2yOa9CyCCIOCMb" version="16.2.4" type="github">
+<mxfile host="app.diagrams.net" modified="2022-01-17T10:22:33.787Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36" etag="UQ6Q1vTdPK4ZiYkVP7rL" version="16.2.4" type="github">
   <diagram name="Page-1" id="929967ad-93f9-6ef4-fab6-5d389245f69c">
-    <mxGraphModel dx="4929" dy="790" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1169" pageHeight="826" background="none" math="0" shadow="0">
+    <mxGraphModel dx="5933" dy="1348" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1169" pageHeight="826" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" style=";html=1;" />
         <mxCell id="1" style=";html=1;" parent="0" />
@@ -89,7 +89,7 @@
         <mxCell id="j3VYzS4IDnfipmHzvKG--3" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" parent="j3VYzS4IDnfipmHzvKG--1" vertex="1">
           <mxGeometry y="90" width="400" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="j3VYzS4IDnfipmHzvKG--4" value="+ Socket()&#xa;+ Socket(AddressInfo const &amp;)&#xa;+ Socket(int, AddressInfo const &amp;, bool, bool);&#xa;+ Socket(Socket const &amp;)&#xa;+ ~Socket()&#xa;&#xa;+ getFiledesc(): int&#xa;+ isBlockling(): bool&#xa;+ isReusingAddress(): bool&#xa;&#xa;+ setBlocking(bool): void&#xa;+ setReusingAddress(bool): void&#xa;+ close(): void&#xa;+ setSockOpt(int, int, void *, size_t): void&#xa;&#xa;+ bind(AddressInfo const *): void&#xa;+ connect(AddressInfo const &amp;): void&#xa;+ listen(int): void&#xa;+ accept(): Socket&#xa;&#xa;+ send(stringstream &amp;, size_t, int): ssize_t&#xa;+ recv(stringstream &amp;, size_t, int): ssize_t&#xa;&#xa;+ operator=(Socket const &amp;)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0" parent="j3VYzS4IDnfipmHzvKG--1" vertex="1">
+        <mxCell id="j3VYzS4IDnfipmHzvKG--4" value="+ Socket()&#xa;+ Socket(AddressInfo const &amp;)&#xa;+ Socket(int, AddressInfo const &amp;, bool, bool);&#xa;+ Socket(Socket const &amp;)&#xa;+ ~Socket()&#xa;&#xa;+ getFiledesc(): int&#xa;+ isBlockling(): bool&#xa;+ isReusingAddress(): bool&#xa;&#xa;+ setBlocking(bool): void&#xa;+ setReusingAddress(bool): void&#xa;+ close(): void&#xa;+ setSockOpt(int, int, void *, size_t): void&#xa;&#xa;+ bind(AddressInfo const *): void&#xa;+ connect(AddressInfo const &amp;): void&#xa;+ listen(int): void&#xa;+ accept(int): Socket&#xa;&#xa;+ send(stringstream &amp;, size_t, int): ssize_t&#xa;+ recv(stringstream &amp;, size_t, int): ssize_t&#xa;&#xa;+ operator=(Socket const &amp;)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0" parent="j3VYzS4IDnfipmHzvKG--1" vertex="1">
           <mxGeometry y="98" width="400" height="352" as="geometry" />
         </mxCell>
         <mxCell id="j3VYzS4IDnfipmHzvKG--18" value="Network Datas" style="text;align=center;fontStyle=1;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=24;" parent="1" vertex="1">
@@ -131,10 +131,10 @@
         <mxCell id="XqV6AA5ABK0mT-hbMeVy-4" value="+ ~FileObjet()&#xa;&#xa;+ getFiledesc(): int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=0" parent="XqV6AA5ABK0mT-hbMeVy-1" vertex="1">
           <mxGeometry y="48" width="400" height="52" as="geometry" />
         </mxCell>
-        <mxCell id="XqV6AA5ABK0mT-hbMeVy-9" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;rounded=0;entryX=0.999;entryY=0.009;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.877;exitY=1.003;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="wqd82JeTupFohGKB9hLJ-2" target="j3VYzS4IDnfipmHzvKG--4" edge="1">
+        <mxCell id="XqV6AA5ABK0mT-hbMeVy-9" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;rounded=0;exitX=0.877;exitY=1.003;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="wqd82JeTupFohGKB9hLJ-2" edge="1">
           <mxGeometry width="160" relative="1" as="geometry">
             <mxPoint x="-80" y="330" as="sourcePoint" />
-            <mxPoint x="30" y="330" as="targetPoint" />
+            <mxPoint x="-90" y="330" as="targetPoint" />
             <Array as="points">
               <mxPoint x="-70" y="345" />
             </Array>
