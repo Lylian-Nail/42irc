@@ -81,10 +81,12 @@ AddressInfo::AddressInfo(
         // Return when finding 1st result
         if (m_ipAddress)
         {
+            freeaddrinfo(results);
             return ;
         }
     }
 
+    freeaddrinfo(results);
     throw NoAddressInfoException()
 }
 
