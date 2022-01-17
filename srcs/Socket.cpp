@@ -130,14 +130,30 @@ void Socket::setSockOpt(int level, int optName, void *value, size_t size)
     { ; }
 }
 
-ssize_t Socket::send(const char *string, size_t len, int flags)
+void Socket::bind(const AddressInfo *newAddress)
 {
-    return ::send(m_filedesc, string, len, flags);
+    if (newAddress)
+        m_addressInfo = *newAddress;
+
+    if (::bind(
+            m_filedesc, m_addressInfo.m_cStyle.ai_addr,
+            m_addressInfo.m_cStyle.ai_addrlen)
+            )
+        // TODO: throw errno sys exception
+    { ; }
 }
 
-ssize_t Socket::recv(void *buffer, size_t len, int flags)
+void Socket::connect(const AddressInfo *remoteAddress)
 {
-    return ::recv(m_filedesc, buffer, len, flags);
+    if (remoteAddress)
+        m_addressInfo = *remoteAddress;
+
+    if (::connect(
+            m_filedesc, m_addressInfo.m_cStyle.ai_addr,
+            m_addressInfo.m_cStyle.ai_addrlen)
+            )
+        // TODO: throw errno sys exception
+    { ; }
 }
 
 std::ostream &operator<<(std::ostream &os, const Socket &socket)

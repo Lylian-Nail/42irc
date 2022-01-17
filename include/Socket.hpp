@@ -25,8 +25,9 @@ public:
     void close();
     void setSockOpt(int level, int optName, void *value, size_t size);
 
-    ssize_t send(const char *string, size_t len, int flags = 0);
-    ssize_t recv(void *buffer,size_t len, int flags = 0);
+    void bind(const AddressInfo *newAddress = NULL);
+    void connect(const AddressInfo *remoteAddress = NULL);
+
     Socket &operator=(Socket const &rhs);
 
 private:
