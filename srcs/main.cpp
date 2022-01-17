@@ -16,22 +16,22 @@
 
 int main(int ac, char const *av[])
 {
-    Socket socket1;
-
     if (ac != 2)
         return EXIT_FAILURE;
 
-    try
+    Socket socket1(AddressInfo(av[1], "http"));
+
+    std::string truc("GET /");
+    ssize_t len = socket1.send(truc.c_str(), truc.length());
+    std::cout << len << std::endl;
+
+    char buffer[1000];
+    len = socket1.recv(buffer, sizeof(buffer) - 1);
+    if (len >= 0)
     {
-        socket1 = Socket(AddressInfo(av[1], "http"));
-        std::cout << socket1 << std::endl;
-        socket1.setBlocking(false);
-        socket1.setReusingAddress(true);
-        std::cout << socket1 << std::endl;
+        buffer[len] = '\0';
+        std::cout << buffer << std::endl;
     }
-    catch (std::exception const &e)
-    {
-        std::cerr << e.what() << std::endl;
-    }
-    return EXIT_SUCCESS;
+
+    socket1.close();
 }

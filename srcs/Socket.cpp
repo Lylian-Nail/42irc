@@ -130,6 +130,16 @@ void Socket::setSockOpt(int level, int optName, void *value, size_t size)
     { ; }
 }
 
+ssize_t Socket::send(const char *string, size_t len, int flags)
+{
+    return ::send(m_filedesc, string, len, flags);
+}
+
+ssize_t Socket::recv(void *buffer, size_t len, int flags)
+{
+    return ::recv(m_filedesc, buffer, len, flags);
+}
+
 std::ostream &operator<<(std::ostream &os, const Socket &socket)
 {
     std::string isBlocking = socket.isBlocking() ?
