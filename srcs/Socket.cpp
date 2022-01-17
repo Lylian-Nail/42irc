@@ -156,6 +156,32 @@ void Socket::connect(const AddressInfo *remoteAddress)
     { ; }
 }
 
+void Socket::listen(int maxQueue)
+{
+    if (::listen(m_filedesc, maxQueue))
+        // TODO: throw errno sys exception
+    { ; }
+}
+
+Socket Socket::accept() const
+{
+    struct sockaddr_storage storageAddress;
+    socklen_t size = sizeof(storageAddress);
+
+    int fd = ::accept(
+                m_filedesc,
+                reinterpret_cast<struct sockaddr *>(&storageAddress),
+                &size
+            );
+    if (fd < 0)
+        // TODO: throw errno sys exception
+    { ; }
+
+    AddressInfo addressInfo(reinterpret_cast<struct sockaddr *>
+            (&storageAddress), size, SOCK_STREAM, IPPROTO_TCP);
+    return Socket(fd, addressInfo);
+}
+
 std::ostream &operator<<(std::ostream &os, const Socket &socket)
 {
     std::string isBlocking = socket.isBlocking() ?

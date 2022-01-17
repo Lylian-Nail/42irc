@@ -27,6 +27,8 @@ public:
 
     void bind(const AddressInfo *newAddress = NULL);
     void connect(const AddressInfo *remoteAddress = NULL);
+    void listen(int maxQueue = 5);
+    Socket accept() const;
 
     Socket &operator=(Socket const &rhs);
 
