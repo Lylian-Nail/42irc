@@ -31,6 +31,10 @@ public:
     AddressInfo();
     AddressInfo(sa_family_t family, int sockType, int protocol, int flags);
     AddressInfo(
+            struct sockaddr const *address, socklen_t sockLen,
+            int sockType,int protocol
+    );
+    AddressInfo(
         char const *ipAddress, char const *service,
         AddressInfo const &hint = AddressInfo(0, 0, 0, 0)
     );

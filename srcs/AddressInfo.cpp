@@ -125,6 +125,40 @@ AddressInfo &AddressInfo::operator=(AddressInfo const &rhs)
     return *this;
 }
 
+AddressInfo::AddressInfo(struct sockaddr const *address, socklen_t sockLen,
+                         int sockType, int protocol):
+        m_flags(0), m_ipFamily(address->sa_family), m_sockType(sockType),
+        m_protocol(protocol)
+{
+    *m_cStyle.ai_addr = *address;
+    m_cStyle.ai_addrlen = sockLen;
+    if (m_ipFamily == AF_INET)
+    {
+        m_ipAddress = ::getIPAddress(
+            reinterpret_cast<struct sockaddr_in *>(m_cStyle.ai_addr)
+            ->sin_addr
+        );
+        m_port = reinterpret_cast<struct sockaddr_in *>(m_cStyle.ai_addr)
+                ->sin_port;
+    }
+    else if (m_ipFamily == AF_INET6)
+    {
+        m_ipAddress = ::getIPAddress(
+            reinterpret_cast<struct sockaddr_in6 *>(m_cStyle.ai_addr)
+            ->sin6_addr
+        );
+        m_port = reinterpret_cast<struct sockaddr_in6 *>(m_cStyle.ai_addr)
+                ->sin6_port;
+    }
+
+    m_cStyle.ai_protocol = m_protocol;
+    m_cStyle.ai_family = m_ipFamily;
+    m_cStyle.ai_socktype = m_sockType;
+    m_cStyle.ai_flags = 0;
+    m_cStyle.ai_canonname = NULL;
+    m_cStyle.ai_next = NULL;
+}
+
 AddressInfo::GetAddressInfoException::GetAddressInfoException(int errcode):
         _errcode(errcode)
 {}
