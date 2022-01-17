@@ -92,7 +92,8 @@ AddressInfo::AddressInfo(
 
 AddressInfo::AddressInfo(AddressInfo const &copy):
         m_flags(copy.m_flags), m_ipFamily(copy.m_ipFamily), m_port(copy.m_port),
-        m_sockType(copy.m_sockType), m_protocol(copy.m_protocol)
+        m_sockType(copy.m_sockType), m_protocol(copy.m_protocol),
+        m_cStyle((copy.m_cStyle))
 {
     if (copy.m_ipAddress != NULL)
         m_ipAddress = copy.m_ipAddress->clone();
@@ -119,6 +120,7 @@ AddressInfo &AddressInfo::operator=(AddressInfo const &rhs)
         m_port = rhs.m_port;
         m_sockType = rhs.m_sockType;
         m_protocol = rhs.m_protocol;
+        m_cStyle = rhs.m_cStyle;
     }
     return *this;
 }
